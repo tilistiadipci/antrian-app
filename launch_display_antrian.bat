@@ -1,0 +1,1 @@
+start chrome.exe --chrome  --disable-pinch --incognito --noerrdialogs --disable-translate --no-first-run --fast --fast-start --disable-infobars --disable-features=TranslateUI --kiosk http://localhost/antrian-app/display/1
