@@ -85,7 +85,7 @@
                 </form>
             </div>
             <div class="row center-align white-text" style="margin-bottom:0">
-                <span>Powered by <a href="http://sangdesains.blogspot.com" target="_blank" style="color:#ccc">Sangdesains</a></span>
+                <span>Powered by <a href="http://bio-experience.com" target="_blank" style="color:#ffffff">Bio Experience</a></span>
             </div>
         </div>
 

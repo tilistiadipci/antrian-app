@@ -90,7 +90,7 @@
         <footer class="page-footer">
             <div class="footer-copyright" style="background:{{ $background_menu }};">
                 <div class="container">
-                    <span>Powered by <a class="grey-text text-lighten-3" href="http://sangdesains.blogspot.com" target="_blank">SangDesains</a> All rights reserved.</span>
+                    <span>Powered by <a href="http://bio-experience.com" target="_blank" style="color:#ffffff">Bio Experience</a></span>
                     <span class="right"> <span class="grey-text text-lighten-3">Version</span> 3.0.0</span>
                 </div>
             </div>

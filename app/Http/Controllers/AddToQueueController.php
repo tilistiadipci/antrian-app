@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Repositories\AddToQueueRepository;
-use App\Models\Setting;
 use App\Models\Department;
-use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
-use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
-use Mike42\Escpos\Printer;
-use Mike42\Escpos\EscposImage;
+use App\Models\Setting;
+use App\Repositories\AddToQueueRepository;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Mike42\Escpos\EscposImage;
+use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\Printer;
 
 class AddToQueueController extends Controller
 {
@@ -72,39 +73,33 @@ class AddToQueueController extends Controller
 
     public function postDept(Request $request)
     {
-        $department = Department::findOrFail($request->department);
-
-        $last_token = $this->add_to_queues->getLastToken($department);
-
-        if($last_token) {
-            $queue = $department->queues()->create([
-                'number' => ((int)$last_token->number)+1,
-                'called' => 0,
-                'id_member' => 0,
-            ]);
-        } else {
-            $queue = $department->queues()->create([
-                'number' => $department->start,
-                'called' => 0,
-                'id_member' => 0,
-            ]);
-        }
-
-        $total = $this->add_to_queues->getCustomersWaiting($department);
-        $number = ($department->letter!='') ? $department->letter.'-'.$queue->number : $queue->number;
-        $settings = Setting::first();
-
-        event(new \App\Events\TokenIssued());
-
-
-        // $request->session()->flash('department_name', $department->name);
-        // $request->session()->flash('number', );
-        // $request->session()->flash('total', $total);
-
-        flash()->success('Token Added');
-        // return redirect()->route('add_to_queue');
-
         try {
+            DB::beginTransaction();
+            
+            $department = Department::findOrFail($request->department);
+
+            $last_token = $this->add_to_queues->getLastToken($department);
+
+            if($last_token) {
+                $queue = $department->queues()->create([
+                    'number' => ((int)$last_token->number)+1,
+                    'called' => 0,
+                    'id_member' => 0,
+                ]);
+            } else {
+                $queue = $department->queues()->create([
+                    'number' => $department->start,
+                    'called' => 0,
+                    'id_member' => 0,
+                ]);
+            }
+
+            $total = $this->add_to_queues->getCustomersWaiting($department);
+            $number = ($department->letter!='') ? $department->letter.'-'.$queue->number : $queue->number;
+            $settings = Setting::first();
+
+            event(new \App\Events\TokenIssued());
+
             if ($settings->printer_type == 'LAN') {
                 $connector = new NetworkPrintConnector($settings->ip_address, 9100);
             } else {
@@ -191,12 +186,13 @@ class AddToQueueController extends Controller
             $printer->cut();
             $printer->close();
 
-            return response()->json(['success' => true], 200);
+            flash()->success('Token Added');
+            DB::commit();
+            return response()->json(['success' => true, 'antrian' => $number], 200);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        return redirect()->back();
     }
 
     private function resizeImage($logoPath) {

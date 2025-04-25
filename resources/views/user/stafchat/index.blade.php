@@ -116,27 +116,27 @@
             });
         }
 
-        window.setInterval(function() {
-            checkcall();
+        // window.setInterval(function() {
+        //     checkcall();
 
-        }, 0);
-
-        
+        // }, 0);
 
         
-        $(document).ready(function() {
-            $.ajax({
-                type: "GET",
-                url: "{{ url('assets/files/chat') }}",
-                cache: false,
-                success: function(response) {
-                    s = JSON.parse(response);
-                    curr =response;
-                }
-            });
 
-            checkcall();
-        });
+        
+        // $(document).ready(function() {
+        //     $.ajax({
+        //         type: "GET",
+        //         url: "{{ url('assets/files/chat') }}",
+        //         cache: false,
+        //         success: function(response) {
+        //             s = JSON.parse(response);
+        //             curr =response;
+        //         }
+        //     });
+
+        //     checkcall();
+        // });
     </script>
    
 @endsection
