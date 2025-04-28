@@ -56,8 +56,7 @@
                                     <div class="card-blog-img position-relative bg-primary"
                                         style="background-image: url('{{ route('beranda') }}/public/img/core-img/2.png');height:195px;">
                                         <span
-                                            style="position:absolute;font-size: 4em;
-   font-weight: 600;margin:30% 5% 0px;color:#fff;font-family: Arial, Helvetica, sans-serif;">
+                                            style="position:absolute;font-size: 4em; font-weight: 600;margin:30% 5% 0px;color:#fff;font-family: Arial, Helvetica, sans-serif;">
                                             @foreach ($departments as $department)
                                                 @if ($department->id == $queue->department_id)
                                                     {{ $department->letter }}{{ $queue->number }}
@@ -74,7 +73,7 @@
 
                                     </div>
 
-                                    <div class="card-blog-content">
+                                    <div class="card-blog-content" style="padding: 0.3rem">
                                         <span class="badge bg-danger rounded-pill mb-2 d-inline-block"
                                             style="font-size:10px;">
                                             {{ $queue->created_at }}
@@ -150,7 +149,7 @@
                                                     Giliran anda!
                                                 @else
                                                     Menunggu
-                                                    {{ $queue->number -$queue->where('called', 1)->where('department_id', $queue->department_id)->where('created_at', '>', $datenow->format('Y-m-d 00:00:00'))->get()->count() -1 }}
+                                                    {{ $queue->number - $queue->where('called', 1)->where('department_id', $queue->department_id)->where('created_at', '>', $datenow->format('Y-m-d 00:00:00'))->get()->count() - 1 }}
                                                     Orang
                                                 @endif
                                             @endif
@@ -185,10 +184,7 @@
                                             <a class="btn btn-sm btn-creative btn-primary" href="#"><i
                                                     class="bi bi-check2-circle"></i></a>
                                         @else
-                                            @if (
-                                                $queue->number -
-                                                    $queue->where('called', 1)->where('department_id', $queue->department_id)->get()->count() ==
-                                                    '1')
+                                            @if ($queue->number - $queue->where('called', 1)->where('department_id', $queue->department_id)->get()->count() == '1')
                                                 <a class="btn btn-sm btn-creative btn-warning" href="#"><i
                                                         class="bi bi-arrow-repeat me-2"></i>Menunggu</a>
                                             @else
@@ -208,6 +204,8 @@
                 </div>
             </div>
         </div>
+
+
         <!-- Bootstrap Basic Modal -->
         <div class="modal fade" id="bootstrapBasicModal" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
@@ -253,53 +251,13 @@
                 </div>
             </div>
         </div>
+        
         <!-- Footer Nav -->
         <div class="footer-nav-area" id="footerNav">
-            <div class="container px-0">
-                <!-- =================================== -->
-                <!-- Paste your Footer Content from here -->
-                <!-- =================================== -->
-                <!-- Footer Content -->
-                <div class="footer-nav position-relative">
-                    <ul class="h-100 d-flex align-items-center justify-content-between ps-0">
-                        <li><a href="{{ route('beranda') }}">
-                                <svg class="bi bi-house" width="20" height="20" viewBox="0 0 16 16"
-                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M2 13.5V7h1v6.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V7h1v6.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5zm11-11V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z">
-                                    </path>
-                                    <path fill-rule="evenodd"
-                                        d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z">
-                                    </path>
-                                </svg><span>Beranda</span></a></li>
-                        <li class="active"><a href="{{ route('antrian_saya') }}">
-                                <svg class="bi bi-collection" width="20" height="20" viewBox="0 0 16 16"
-                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M14.5 13.5h-13A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5zm-13 1A1.5 1.5 0 0 1 0 13V6a1.5 1.5 0 0 1 1.5-1.5h13A1.5 1.5 0 0 1 16 6v7a1.5 1.5 0 0 1-1.5 1.5h-13zM2 3a.5.5 0 0 0 .5.5h11a.5.5 0 0 0 0-1h-11A.5.5 0 0 0 2 3zm2-2a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7A.5.5 0 0 0 4 1z">
-                                    </path>
-                                </svg><span>Antrian Saya</span></a></li>
-                        {{-- <li><a href="{{ route('listchat') }}">
-                                <svg class="bi bi-chat-dots" xmlns="http://www.w3.org/2000/svg" width="20"
-                                    height="20" fill="currentColor" viewBox="0 0 16 16">
-                                    <path
-                                        d="M5 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm4 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z">
-                                    </path>
-                                    <path
-                                        d="M2.165 15.803l.02-.004c1.83-.363 2.948-.842 3.468-1.105A9.06 9.06 0 0 0 8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6a10.437 10.437 0 0 1-.524 2.318l-.003.011a10.722 10.722 0 0 1-.244.637c-.079.186.074.394.273.362a21.673 21.673 0 0 0 .693-.125zm.8-3.108a1 1 0 0 0-.287-.801C1.618 10.83 1 9.468 1 8c0-3.192 3.004-6 7-6s7 2.808 7 6c0 3.193-3.004 6-7 6a8.06 8.06 0 0 1-2.088-.272 1 1 0 0 0-.711.074c-.387.196-1.24.57-2.634.893a10.97 10.97 0 0 0 .398-2z">
-                                    </path>
-                                </svg><span>Pesan</span></a></li> --}}
-                        <li><a href="{{ route('profile') }}">
-                                <svg width="20" height="20" viewBox="0 0 16 16" class="bi bi-person"
-                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M13 14s1 0 1-1-1-4-6-4-6 3-6 4 1 1 1 1h10zm-9.995-.944v-.002.002zM3.022 13h9.956a.274.274 0 0 0 .014-.002l.008-.002c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664a1.05 1.05 0 0 0 .022.004zm9.974.056v-.002.002zM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0z">
-                                    </path>
-                                </svg><span>Login</span></a></li>
-                    </ul>
-                </div>
-            </div>
+            @include('mobile.menu-bar')
         </div>
+
+
         <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -362,6 +320,7 @@
                 </div>
             </div>
         </div>
+
         <div class="modal fade" id="suksesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="alert custom-alert-3 alert-primary alert-dismissible fade show" role="alert">
@@ -455,7 +414,7 @@
                                 canvas.toBlob(function(blob) {
                                     window.saveAs(blob,
                                         "{{ session()->get('department_name') }}-{{ session()->get('number') }}.png"
-                                        )
+                                    )
                                 }, 'image/png')
                                 //location.reload();
                             },
