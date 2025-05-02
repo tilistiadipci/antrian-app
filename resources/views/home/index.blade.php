@@ -186,6 +186,7 @@
                                     <p class="mb-4 text-black">Silahkan klik tombol layanan di bawah untuk mengambil
                                         antrian.</p>
                                 </div>
+
                                 @foreach ($departments as $department)
                                     @if (!$total)
                                         <a class="btn m-1 btn-creative btn-primary open_modal" style="font-size:11px;"
@@ -193,9 +194,14 @@
                                             onclick="queue_dept({{ $department->id }})"><i
                                                 class="bi bi-receipt me-1"></i>{{ $department->name }}</a>
                                     @else
-                                        @if (
-                                            $total->where('department_id', $department->id)->where('id_member', $member)->count() ==
-                                                $settings->jml_antrian_hari)
+                                    
+                                @php
+                                    $antrianUser = $total->where('department_id', $department->id)
+                                                    ->where('id_member', $member)
+                                                    ->where('called', 0)
+                                                    ->count();
+                                @endphp
+                                        @if ($antrianUser == $settings->jml_antrian_hari)
                                             <a class="btn m-1 btn-creative btn-primary open_modal2" href="#"
                                                 data-target="#loginModal2"><i
                                                     class="bi bi-receipt me-1"></i>{{ $department->name }}</a>

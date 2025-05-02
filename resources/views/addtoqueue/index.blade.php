@@ -66,6 +66,10 @@
                 },
                 success: function(response) {
                     console.log(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                    alert('Setting printer failed!');
                 }
             })
             // $('body').removeClass('loaded');
