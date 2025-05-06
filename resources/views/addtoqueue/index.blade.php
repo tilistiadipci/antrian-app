@@ -32,12 +32,20 @@
                 <span class="ambilant">Sentuh tombol dibawah untuk mengambil nomor antrian</span>
             </div>
             <div class="card-panel center-align" style="background:transparent;">
-
-                @foreach ($departments as $department)
-                    <span class="btn btn-large btn-queue tombol" style="width:40%;"
-                        onclick="queue_dept({{ $department->id }})">{{ $department->name }}<img
-                            src="{{ asset('assets/images') }}/touch.png" class="btngmb"></span>
-                @endforeach
+                @if (count($departments) <= 2)
+                    @foreach ($departments as $department)
+                        <span class="btn btn-large btn-queue tombol" style="width:40%;"
+                            onclick="queue_dept({{ $department->id }})">{{ $department->name }}
+                            <img src="{{ asset('assets/images') }}/touch.png" class="btngmb">
+                        </span> <br>
+                    @endforeach
+                @else
+                    @foreach ($departments as $department)
+                        <span class="btn btn-large btn-queue tombol" style="width:40%;"
+                            onclick="queue_dept({{ $department->id }})">{{ $department->name }}<img
+                                src="{{ asset('assets/images') }}/touch.png" class="btngmb"></span>
+                    @endforeach
+                @endif
             </div>
         </div>
     </div>
