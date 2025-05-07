@@ -244,6 +244,7 @@
                 success: function(response) {
                     if (response.status == 'success') {
                         $('#call-table').DataTable().ajax.reload(null, false);
+                        $('#num0').html(response.call_number);
                     }
 
                     $('.btn-recall').prop('disabled', false);
@@ -296,11 +297,7 @@
                     }
                 ],
                 drawCallback: function(res) {
-                    // console.log datanya
-                    console.log(res.json);
-
                     var active = 0;
-
                     if (adm == 1) {
                         this.api().rows({
                             'filter': 'applied'
@@ -354,9 +351,8 @@
                     }
                 },
                 success: function(response) {
-                    console.log(response)
                     if (response.status == 'success') {
-                        $('#num0').html(response.number);
+                        $('#num0').html(response.data.call_number);
                         $('#call-table').DataTable().ajax.reload(null, false);
                     }
                 },

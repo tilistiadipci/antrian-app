@@ -78,6 +78,7 @@ class CallController extends Controller
                 'message' => 'Berhasil Memanggil',
                 'data' => [
                     'number' => $queue->number,
+                    'call_number' => $department->letter.'-'.$queue->number,
                     'department' => $department->name,
                     'counter' => $counter->name,
                     'user' => $user->name,
@@ -128,10 +129,12 @@ class CallController extends Controller
         event(new \App\Events\TokenCalled());
 
         if (request()->ajax()) {
+            $data = $new_call->load('department');
             return response()->json([
                 'status' => 'success',
                 'message' => 'Memanggil Ulang',
-                'data' => $new_call,
+                'data' => $data,
+                'call_number' => $data->department->letter.'-'.$data->number
             ]);
         }
 
