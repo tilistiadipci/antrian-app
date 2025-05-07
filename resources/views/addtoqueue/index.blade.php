@@ -35,14 +35,14 @@
                 @if (count($departments) <= 2)
                     @foreach ($departments as $department)
                         <span class="btn btn-large btn-queue tombol" style="width:40%;"
-                            onclick="queue_dept({{ $department->id }})">{{ $department->name }}
+                            onclick="queue_dept({{ $department->id }}, this)">{{ $department->name }}
                             <img src="{{ asset('assets/images') }}/touch.png" class="btngmb">
                         </span> <br>
                     @endforeach
                 @else
                     @foreach ($departments as $department)
                         <span class="btn btn-large btn-queue tombol" style="width:40%;"
-                            onclick="queue_dept({{ $department->id }})">{{ $department->name }}<img
+                            onclick="queue_dept({{ $department->id }}, this)">{{ $department->name }}<img
                                 src="{{ asset('assets/images') }}/touch.png" class="btngmb"></span>
                     @endforeach
                 @endif
@@ -64,7 +64,7 @@
             });
         });
 
-        function queue_dept(value) {
+        function queue_dept(value, element) {
             $.ajax({
                 url: `{{ route('post_add_to_queue') }}`,
                 method: 'POST',
@@ -72,11 +72,32 @@
                     _token: '{{ csrf_token() }}',
                     department: value
                 },
+                beforeSend: function() {
+                    // efek tombol ditekan
+                    $('.tombol').attr('disabled', true);
+                    $(element).css({
+                        'transform': 'scale(0.95)',   // Efek seolah tombol ditekan
+                        'opacity': '0.7',
+                        'box-shadow': 'inset 0 2px 5px rgba(0,0,0,0.2)'
+                    })
+                },
                 success: function(response) {
                     console.log(response);
+                    $('.tombol').attr('disabled', false);
+                    $(element).css({
+                        'transform': 'scale(1)',
+                        'opacity': '1',
+                        'box-shadow': 'none'
+                    })
                 },
                 error: function(xhr, status, error) {
                     console.error(xhr.responseText);
+                    $('.tombol').attr('disabled', false);
+                    $(element).css({
+                        'transform': 'scale(1)',
+                        'opacity': '1',
+                        'box-shadow': 'none'
+                    })
                     alert('Setting printer failed!');
                 }
             })
