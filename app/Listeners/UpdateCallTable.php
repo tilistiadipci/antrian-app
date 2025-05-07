@@ -36,12 +36,13 @@ class UpdateCallTable
                 $queue_array[$key]['number'] = ($queue->department->letter!='')?$queue->department->letter.'-'.$queue->number:$queue->number;
                 $queue_array[$key]['called'] = 'Ya';
                 $queue_array[$key]['counter'] = $queue->call->counter->name.'' .$queue->call->counter->idcounter;
-                $queue_array[$key]['recall'] = '<button class="btn waves-effect waves-light center" type="submit" style="background:#FF5733;border-radius: 20px 20px 20px 20px;" onclick="recall('.$queue->call->id.')">
+                $queue_array[$key]['recall'] = '<button class="btn waves-effect waves-light center btn-recall" type="button" style="background:#FF5733;border-radius: 20px 20px 20px 20px;" onclick="recall('.$queue->call->id.')">
                                         Recall<i class="mdi-navigation-refresh right"></i>
                                     </button>';
             } else {
                 $queue_array[$key]['id'] = ((int)$key)+1;
                 $queue_array[$key]['department'] = $queue->department->name;
+                $queue_array[$key]['department_id'] = $queue->department->id;
                 $queue_array[$key]['number'] = ($queue->department->letter!='')?$queue->department->letter.'-'.$queue->number:$queue->number;
                 $queue_array[$key]['called'] = 'Tidak';
                 $queue_array[$key]['counter'] = '-';

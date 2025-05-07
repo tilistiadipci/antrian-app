@@ -35,7 +35,8 @@
 
                  <h1 class="logo-wrapper"><img src="{{ asset('assets/images') }}/{{ $settings->logo }}" width="{{ $settings->size_logo }}" class="brand-logo-a responsive-img">
                  </h1><br/><br/>
-        <span class="ambilant ml12">Harap anda memberikan penilaian terhadap pelayanan kami</span>
+        <div class="ambilant ml12">Harap anda memberikan penilaian terhadap pelayanan kami</div>
+        <br>
         <div class="col m6">
             <span class="btn btn-large btn-queue tombol-testi" style="width:100%;" onclick="testi_dept(1)">SANGAT PUAS<img src="{{ asset('assets/images') }}/icons-testimoni/sangat-puas.gif" class="btngmb1"></span>
         </div>

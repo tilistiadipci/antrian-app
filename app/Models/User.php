@@ -44,7 +44,7 @@ class User extends Authenticatable
 
     public function department()
     {
-        return $this->belongsTo('App\Models\Department');
+        return $this->belongsTo('App\Models\Department', 'departments', 'id');
     }
 
     public function counter()

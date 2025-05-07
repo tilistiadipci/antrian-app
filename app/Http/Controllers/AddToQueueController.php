@@ -30,7 +30,6 @@ class AddToQueueController extends Controller
 
         \App::setLocale($settings->language->code);
 
-
         return view('addtoqueue.index', [
             'settings' => $settings,
             'departments' => $this->add_to_queues->getDepartments(),
@@ -106,7 +105,6 @@ class AddToQueueController extends Controller
                 $connector = new WindowsPrintConnector($settings->port_usb);
             }
             
-
             $printer = new Printer($connector);
 
             \App::setLocale($settings->language->code);
@@ -198,7 +196,7 @@ class AddToQueueController extends Controller
     private function resizeImage($logoPath) {
         $logo = imagecreatefrompng($logoPath);
     
-        $newWidth = 400;
+        $newWidth = 200;
         $oldWidth = imagesx($logo);
         $oldHeight = imagesy($logo);
         $newHeight = floor($oldHeight * ($newWidth / $oldWidth));

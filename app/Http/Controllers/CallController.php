@@ -22,10 +22,13 @@ class CallController extends Controller
     public function index(Request $request, Department $department)
     {
         
+        $user = User::where('id', auth()->user()->id)->with('department')->first();
         event(new \App\Events\TokenIssued());
         event(new \App\Events\TokenCalled());
+
         return view('user.calls.index', [
-            'users' => $this->calls->getUsers(),
+            // 'users' => $this->calls->getUsers(),
+            'user' => $user,
             'counters' => $this->calls->getCounters(),
             'departments' => $this->calls->getDepartments(),
             'data' => $this->calls->getDisplayData(),
@@ -69,6 +72,19 @@ class CallController extends Controller
         event(new \App\Events\TokenIssued());
         event(new \App\Events\TokenCalled());
 
+        if (request()->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Berhasil Memanggil',
+                'data' => [
+                    'number' => $queue->number,
+                    'department' => $department->name,
+                    'counter' => $counter->name,
+                    'user' => $user->name,
+                ],
+            ]);
+        }
+
         flash()->success('Berhasil Memanggil');
         return redirect()->route('calls');
     }
@@ -110,6 +126,14 @@ class CallController extends Controller
         $call->delete(); 
 
         event(new \App\Events\TokenCalled());
+
+        if (request()->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Memanggil Ulang',
+                'data' => $new_call,
+            ]);
+        }
 
         flash()->success('Memanggil Ulang');
         return $new_call->toJson();
