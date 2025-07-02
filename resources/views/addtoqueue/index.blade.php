@@ -178,7 +178,7 @@
             </form>
         </div>
         <div class="modal-footer">
-            <a href="javascript:void(0)" class="modal-close waves-effect btn-flat">Batal</a>
+            <a href="javascript:void(0)" class="modal-close waves-effect waves-red btn-flat">Batal</a>
             <a href="javascript:void(0)" onclick="submitGuest()" class="waves-effect waves-green btn"
                 id="guestSubmit">Kirim</a>
         </div>

@@ -69,18 +69,18 @@
                     <table id="report-table" class="display" cellspacing="0">
                         <thead style="background-color: #00aa9a; color: #fff">
                             <tr>
-                                <th style="width:40px">#</th>
+                                <th style="width:20px" align="center">#</th>
                                 <th>Nama</th>
                                 <th>Sales</th>
                                 <th>Email</th>
                                 <th>No HP</th>
-                                <th width="15%">Waktu Berkunjung</th>
+                                <th width="18%">Waktu Berkunjung</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($guests as $call)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td class="center">{{ $loop->iteration }}</td>
                                     <td>{{ $call->name }}</td>
                                     <td>{{ $call->sales->name }}</td>
                                     <td>{{ $call->email }}</td>
