@@ -152,7 +152,8 @@
                     <select id="sales" name="sales" required>
                         <option value="" disabled selected>Pilih Sales</option>
                         @foreach ($sales as $s)
-                            <option value="{{ $s->id }}" {{ $sales_assigned->id == $s->id ? 'selected' : '' }}>{{ $s->name }}</option>
+                            <option value="{{ $s->id }}" {{ $sales_assigned->id == $s->id ? 'selected' : '' }}>
+                                {{ $s->name }}</option>
                         @endforeach
                     </select>
                     <label for="sales">Sales <span style="color: red">*</span></label>
@@ -177,7 +178,8 @@
         </div>
         <div class="modal-footer">
             <a href="javascript:void(0)" class="modal-close waves-effect btn-flat">Batal</a>
-            <a href="javascript:void(0)" onclick="submitGuest()" class="waves-effect waves-green btn" id="guestSubmit">Kirim</a>
+            <a href="javascript:void(0)" onclick="submitGuest()" class="waves-effect waves-green btn"
+                id="guestSubmit">Kirim</a>
         </div>
     </div>
 
@@ -241,22 +243,51 @@
 @endsection
 
 @section('script')
-    <!-- jQuery -->
+    {{-- Simpan jQuery 1 dari layout global --}}
+    <script>
+        var jq1 = window.jQuery;
+    </script>
+
+    {{-- Load jQuery 3 dan jadikan sementara global --}}
     <script src="{{ asset('assets/js/jquery-3.6.0.min.js') }}"></script>
 
-    <!-- Materialize JS -->
+    {{-- Simpan jQuery 3 ke variabel terpisah --}}
+    <script>
+        var jq3 = window.jQuery;
+    </script>
+
+    {{-- Load Materialize (harus setelah jQuery 3 aktif) --}}
     <script src="{{ asset('assets/js/materializev1.min.js') }}"></script>
 
+    {{-- Kembalikan jQuery 1 sebagai global --}}
+    <script>
+        window.jQuery = jq1;
+        window.$ = jq1;
+    </script>
+
+    {{-- Inisialisasi UI pakai jq3 agar Materialize tidak error --}}
+    <script>
+        jq3(function() {
+            M.Modal.init(document.querySelectorAll('.modal'));
+            document.querySelectorAll('select').forEach(select => {
+                if (!M.FormSelect.getInstance(select)) {
+                    M.FormSelect.init(select);
+                }
+            });
+        });
+    </script>
+
+    {{-- Script kamu: queue + modal pakai jQuery 1 --}}
     <script>
         $(function() {
             $('#main').css({
                 'min-height': $(window).height() - 134 + 'px'
             });
-        });
 
-        $(window).resize(function() {
-            $('#main').css({
-                'min-height': $(window).height() - 134 + 'px'
+            $(window).resize(function() {
+                $('#main').css({
+                    'min-height': $(window).height() - 134 + 'px'
+                });
             });
         });
 
@@ -283,6 +314,10 @@
                         opacity: '1',
                         boxShadow: 'none'
                     });
+                    M.toast({
+                        html: res.message ?? 'Berhasil',
+                        classes: 'green darken-1 white-text bottom-center'
+                    });
                 },
                 error: function() {
                     $('.tombol').attr('disabled', false);
@@ -295,17 +330,6 @@
                 }
             });
         }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            M.Modal.init(document.querySelectorAll('.modal'));
-
-            const selects = document.querySelectorAll('select');
-            selects.forEach(select => {
-                if (!M.FormSelect.getInstance(select)) {
-                    M.FormSelect.init(select);
-                }
-            });
-        });
 
         function openGuestModal() {
             resetGuestForm();
@@ -327,24 +351,22 @@
 
         function submitGuest() {
             if (!$('#guestForm')[0].checkValidity()) {
-                $('#guestSubmit').attr('disabled', true);
-                $('#guestSubmit').html('<i class="fa fa-spinner fa-spin"></i> Loading...');
+                $('#guestSubmit').attr('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Loading...');
                 M.toast({
                     html: 'Pengisian form belum lengkap',
-                    classes: 'red darken-1 white-text bottom-center',
+                    classes: 'red darken-1 white-text bottom-center'
                 });
-                
-                $('#guestSubmit').attr('disabled', false);
-                $('#guestSubmit').html('KIRIM');
+                $('#guestSubmit').attr('disabled', false).html('KIRIM');
                 return;
             }
+
             $.ajax({
                 url: '{{ route('guest_register') }}',
                 method: 'POST',
                 data: $('#guestForm').serialize(),
                 beforeSend: function() {
-                    $('#guestSubmit').attr('disabled', true);
-                    $('#guestSubmit').html('<i class="fa fa-spinner fa-spin"></i> Loading...');
+                    $('#guestSubmit').attr('disabled', true).html(
+                        '<i class="fa fa-spinner fa-spin"></i> Loading...');
                 },
                 success: function() {
                     M.Modal.getInstance(document.getElementById('guestModal')).close();
@@ -357,135 +379,107 @@
                 error: function() {
                     M.toast({
                         html: 'Gagal mengirim data',
-                        classes: 'red darken-1 white-text bottom-center',
+                        classes: 'red darken-1 white-text bottom-center'
                     });
                 },
                 complete: function() {
-                    $('#guestSubmit').attr('disabled', false);
-                    $('#guestSubmit').html('KIRIM');
-                },
+                    $('#guestSubmit').attr('disabled', false).html('KIRIM');
+                }
             });
         }
     </script>
 
+    {{-- Virtual Keyboard pakai jq3 agar tidak konflik --}}
     <script>
-        $(function() {
-            var select2Open = false;
+        jq3(function() {
             let shiftActive = false;
-            let activeInput = $(".input-keyboard");
+            let activeInput = jq3(".input-keyboard");
             let isDragging = false;
             let offsetX, offsetY;
-
-            // const isTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+            let select2Open = false;
 
             function updateKeys() {
-                $(".keys").each(function() {
-                    const key = $(this);
-                    const defaultKey = key.data("default");
-                    const shiftKey = key.data("shift");
-                    if (shiftKey) {
-                        key.text(shiftActive ? shiftKey : defaultKey);
-                    } else {
-                        key.text(
-                            shiftActive ?
-                            key.text().toUpperCase() :
-                            key.text().toLowerCase()
-                        );
-                    }
+                jq3(".keys").each(function() {
+                    const key = jq3(this);
+                    const def = key.data("default");
+                    const shift = key.data("shift");
+                    key.text(shift ? (shiftActive ? shift : def) : (shiftActive ? key.text().toUpperCase() :
+                        key.text().toLowerCase()));
                 });
             }
 
-            function keyboardWrite(element, keypad) {
-                const key = keypad.text().trim();
-
-                if (keypad.is("#backspace")) {
-                    const val = element.val();
-                    element.val(val.slice(0, -1));
-                } else if (keypad.is("#space")) {
-                    element.val(element.val() + " ");
-                } else if (keypad.is("#shift")) {
+            function keyboardWrite(el, key) {
+                const k = key.text().trim();
+                if (key.is("#backspace")) {
+                    el.val(el.val().slice(0, -1));
+                } else if (key.is("#space")) {
+                    el.val(el.val() + " ");
+                } else if (key.is("#shift")) {
                     shiftActive = !shiftActive;
-                    keypad.toggleClass("shift-active", shiftActive);
+                    key.toggleClass("shift-active", shiftActive);
                     updateKeys();
                 } else {
-                    element.val(element.val() + key);
+                    el.val(el.val() + k);
                 }
-
-                element.trigger("input").focus();
+                el.trigger("input").focus();
             }
 
-            $(document).on("click touchstart", ".keys", function(e) {
-                e.stopPropagation(); // Mencegah event bubbling
-                if (select2Open) {
-                    activeInput = $(".select2-search__field");
-                }
-                keyboardWrite(activeInput, $(this));
+            jq3(document).on("click touchstart", ".keys", function(e) {
+                e.stopPropagation();
+                if (select2Open) activeInput = jq3(".select2-search__field");
+                keyboardWrite(activeInput, jq3(this));
             });
 
-            $(document).on("focus touchstart", ".input-keyboard", function() {
-                $(".keyboard").show();
-                activeInput = $(this);
+            jq3(document).on("focus touchstart", ".input-keyboard", function() {
+                jq3(".keyboard").show();
+                activeInput = jq3(this);
                 select2Open = false;
             });
 
-            $(".js-source-select2").on("select2:open", function() {
-                $(".keyboard").show();
+            jq3(".js-source-select2").on("select2:open", function() {
+                jq3(".keyboard").show();
                 select2Open = true;
-
-                // Fokuskan input pencarian Select2
-                setTimeout(function() {
-                    const searchField = $(".select2-search__field");
-                    searchField.focus(); // Fokus input
-                    activeInput = searchField;
+                setTimeout(() => {
+                    const field = jq3(".select2-search__field");
+                    field.focus();
+                    activeInput = field;
                 }, 100);
             });
 
-            $(".js-source-select2").on("select2:close", function() {
-                $(".keyboard").hide();
+            jq3(".js-source-select2").on("select2:close", () => {
+                jq3(".keyboard").hide();
                 select2Open = false;
             });
 
-            // Menangani klik di luar keyboard untuk menyembunyikan
-            $(document).on("click touchstart", function(event) {
-                if (
-                    !$(event.target).closest(".input-keyboard, .keyboard").length &&
-                    !select2Open
-                ) {
-                    $(".keyboard").hide();
+            jq3(document).on("click touchstart", function(e) {
+                if (!jq3(e.target).closest(".input-keyboard, .keyboard").length && !select2Open) {
+                    jq3(".keyboard").hide();
                 }
             });
 
-            // Mencegah Select2 tertutup ketika keyboard virtual diklik
-            $(".keyboard").on("mousedown touchstart", function(event) {
-                event.stopPropagation();
-            });
-
-            // Dragging keyboard virtual
-            $(".keyboard").on("mousedown touchstart", function(e) {
+            jq3(".keyboard").on("mousedown touchstart", function(e) {
                 isDragging = true;
-                const clientX = e.clientX || e.touches[0].clientX;
-                const clientY = e.clientY || e.touches[0].clientY;
-                offsetX = clientX - $(this).offset().left;
-                offsetY = clientY - $(this).offset().top;
-                $(this).css("transition", "none");
+                const cx = e.clientX || e.touches[0].clientX;
+                const cy = e.clientY || e.touches[0].clientY;
+                offsetX = cx - jq3(this).offset().left;
+                offsetY = cy - jq3(this).offset().top;
+                jq3(this).css("transition", "none");
             });
 
-            $(document).on("mousemove touchmove", function(e) {
+            jq3(document).on("mousemove touchmove", function(e) {
                 if (isDragging) {
-                    const clientX = e.clientX || e.touches[0].clientX;
-                    const clientY = e.clientY || e.touches[0].clientY;
-
-                    $(".keyboard").css({
-                        position: "fixed",
-                        left: clientX - offsetX + "px",
-                        top: clientY - offsetY + "px",
+                    const cx = e.clientX || e.touches[0].clientX;
+                    const cy = e.clientY || e.touches[0].clientY;
+                    jq3(".keyboard").css({
+                        left: cx - offsetX + "px",
+                        top: cy - offsetY + "px"
                     });
                 }
             });
 
-            $(document).on("mouseup touchend", function() {
+            jq3(document).on("mouseup touchend", function() {
                 isDragging = false;
-                $(".keyboard").css("transition", "all 0.3s ease");
+                jq3(".keyboard").css("transition", "all 0.3s ease");
             });
 
             updateKeys();
