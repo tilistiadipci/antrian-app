@@ -148,16 +148,17 @@
             <br>
             <form id="guestForm">
                 @csrf
-                <div class="input-field">
-                    <select id="sales" name="sales" required>
-                        <option value="" disabled selected>Pilih Sales</option>
+                <div class="row">
+                    <label for="nocounter">Sales <span style="color: red">*</span></label>
+                    <select id="sales" class="browser-default" name="sales">
                         @foreach ($sales as $s)
-                            <option value="{{ $s->id }}" {{ $sales_assigned->id == $s->id ? 'selected' : '' }}>
-                                {{ $s->name }}</option>
+                            <option value="{{ $s->id }}" {{ ($sales_assigned->id ?? '') == $s->id ? 'selected' : '' }}>
+                                {{ $s->name }}
+                            </option>
                         @endforeach
                     </select>
-                    <label for="sales">Sales <span style="color: red">*</span></label>
                 </div>
+
                 <div class="input-field">
                     <input id="name" class="input-keyboard" name="name" type="text" required autocomplete="off">
                     <label for="name">Nama <span style="color: red">*</span></label>
