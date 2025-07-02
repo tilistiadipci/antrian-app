@@ -9,6 +9,7 @@
         <link rel="icon" href="{{ asset('assets/favicon.png') }}">
         <link href="{{ asset('assets/css/materialize.min.css') }}" type="text/css" rel="stylesheet" media="screen,projection">
         <link href="{{ asset('assets/js/plugins/perfect-scrollbar/perfect-scrollbar.css') }}" type="text/css" rel="stylesheet" media="screen,projection">
+        <link href="{{ asset('assets/css/toastr.min.css') }}" type="text/css" rel="stylesheet" media="screen,projection">
         @yield('css')
         <link href="{{ asset('assets/css/style.min.css') }}" type="text/css" rel="stylesheet" media="screen,projection">
             
@@ -19,6 +20,19 @@
         margin-bottom: 15px;
         padding: 15px 0 0 15px;
     }
+    .required-label::after {
+        content: " *";
+        color: red;
+        font-weight: bold;
+    }
+
+    /* .optional-label::after {
+        content: " (optional)";
+        color: #999;
+        font-style: italic;
+        font-weight: normal;
+    } */
+
 </style>
     </head>
 
@@ -103,6 +117,9 @@
         <script type="text/javascript" src="{{ asset('assets/js/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/select2.min.js') }}"></script>
         <script type="text/javascript" src="{{ asset('assets/js/plugins.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('assets/js/sweetalert.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('assets/js/toastr.min.js') }}"></script>
+
         @yield('script')
         <script>
             $(function() {
@@ -156,6 +173,32 @@
             $('#date').on('mousedown', function(event) {
                 event.preventDefault();
             })
+
+            $(document).ready(function () {
+                $("label[for]").each(function () {
+                    const inputId = $(this).attr("for");
+                    const inputEl = $("#" + inputId);
+
+                    if (inputEl.prop("required")) {
+                        $(this).addClass("required-label");
+                    } else {
+                        $(this).addClass("optional-label");
+                    }
+                });
+            });
+
+            // toastr
+            @if (Session::has('success'))
+                toastr.success("{{ Session::get('success') }}");
+            @endif
+
+            @if (Session::has('error'))
+                toastr.error("{{ Session::get('error') }}");
+            @endif
+
+            @if (Session::has('warning'))
+                toastr.warning("{{ Session::get('warning') }}");
+            @endif
         </script>
         @include('common.messages')
     </body>

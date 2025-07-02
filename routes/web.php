@@ -76,6 +76,9 @@ Route::post('password/reset', ['as' => 'post_reset', 'uses' => 'Auth\ResetPasswo
 // Add to Queue
 Route::get('queue', ['as' => 'add_to_queue', 'uses' => 'AddToQueueController@index']);
 Route::post('queue', ['as' => 'post_add_to_queue', 'uses' => 'AddToQueueController@postDept']);
+Route::post('guest-register', ['as' => 'guest_register', 'uses' => 'AddToQueueController@guestRegister']);
+
+Route::get('get-content', ['as' => 'get_content', 'uses' => 'AddToQueueController@getContent']);
 
 // Display
 Route::get('display', ['as' => 'display', 'uses' => 'DisplayController@index']);
@@ -104,7 +107,11 @@ Route::group(['middleware' => 'auth:users'], function () {
     Route::get('stafchat/{id}', ['as' => 'stafchat', 'uses' => 'HomeController@stafChat']);
     Route::post('stafchat/{id}', ['as' => 'sendchatstaf', 'uses' => 'HomeController@sendMessageStaf']);
 
+    // Sales
+    Route::resource('sales', 'SalesController');
 
+    // Guest
+    Route::resource('guest', 'GuestController');
 
     // Dashboard
     Route::get('dashboard', ['as' => 'dashboard', 'uses' => 'DashboardController@index']);
@@ -122,7 +129,7 @@ Route::group(['middleware' => 'auth:users'], function () {
     Route::post('calls/dept/{department}', ['as' => 'post_dept', 'uses' => 'CallController@postDept']);
 
     // Display
-    Route::get('masterdisplay', ['as' => 'masterdisplay', 'uses' => 'MasterDisplayController@index']);
+    // Route::get('masterdisplay', ['as' => 'masterdisplay', 'uses' => 'MasterDisplayController@index']);
     // Route::post('display', ['as' => 'post_call', 'uses' => 'CallController@newCall']);
     // Route::post('display/recall', ['as' => 'post_recall', 'uses' => 'CallController@recall']);
     // Route::post('display/dept/{department}', ['as' => 'post_dept', 'uses' => 'CallController@postDept']);
@@ -150,6 +157,8 @@ Route::group(['middleware' => 'auth:users'], function () {
         // Monthly Report
         Route::get('monthly', ['as' => 'monthly', 'uses' => 'MonthlyReportController@index']);
         Route::get('monthly/{department}/{sdate}/{edate}', ['as' => 'monthly_show', 'uses' => 'MonthlyReportController@show']);
+
+        Route::get('guest', ['as' => 'guest', 'uses' => 'GuestReportController@index']);
 
         // Statistical Report
         Route::get('statistical', ['as' => 'statistical', 'uses' => 'StatisticalReportController@index']);

@@ -6,7 +6,9 @@ use App\Models\Department;
 use App\Models\Setting;
 use App\Repositories\AddToQueueRepository;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
@@ -28,47 +30,40 @@ class AddToQueueController extends Controller
     {
         $settings = Setting::first();
 
-        \App::setLocale($settings->language->code);
+        App::setLocale($settings->language->code);
 
         return view('addtoqueue.index', [
             'settings' => $settings,
             'departments' => $this->add_to_queues->getDepartments(),
+            'sales' => \App\Sales::all(),
+            'sales_assigned' => \App\Sales::where('is_sales_assigned', 1)->first()
         ]);
-
-        
     }
 
-    // public function postDept(Request $request)
-    // {
-    //     $department = Department::findOrFail($request->department);
+    public function guestRegister(Request $request) {
+        try {
+            $guest = new \App\Guest;
+            $guest->name = $request->name;
+            $guest->email = $request->email;
+            $guest->no_hp = $request->no_hp;
+            $guest->dinas = $request->dinas;
+            $guest->sales_id = $request->sales;
 
-    //     $last_token = $this->add_to_queues->getLastToken($department);
+            $guest->save();
 
-    //     if($last_token) {
-    //         $queue = $department->queues()->create([
-    //             'number' => ((int)$last_token->number)+1,
-    //             'called' => 0,
-    //             'id_member' => 0,
-    //         ]);
-    //     } else {
-    //         $queue = $department->queues()->create([
-    //             'number' => $department->start,
-    //             'called' => 0,
-    //             'id_member' => 0,
-    //         ]);
-    //     }
-
-    //     $total = $this->add_to_queues->getCustomersWaiting($department);
-
-    //     event(new \App\Events\TokenIssued());
-
-    //     $request->session()->flash('department_name', $department->name);
-    //     $request->session()->flash('number', ($department->letter!='')?$department->letter.'-'.$queue->number:$queue->number);
-    //     $request->session()->flash('total', $total);
-
-    //     //flash()->success('Token Added');
-    //     return redirect()->route('add_to_queue');
-    // }
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data berhasil disimpan',
+                'log' => $guest
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan. Silahkan coba lagi',
+                'log' => $e
+            ]);
+        }
+    }
 
     public function postDept(Request $request)
     {
@@ -107,7 +102,7 @@ class AddToQueueController extends Controller
             
             $printer = new Printer($connector);
 
-            \App::setLocale($settings->language->code);
+            App::setLocale($settings->language->code);
             
             $logoPath = app_path().'/../assets/images/'.$settings->logo;
 
