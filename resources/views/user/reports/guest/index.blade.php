@@ -72,7 +72,7 @@
                                 <th style="width:20px" align="center">#</th>
                                 <th>Nama</th>
                                 <th>Sales</th>
-                                <th>Email</th>
+                                <th>Instansi / Lembaga</th>
                                 <th>No HP</th>
                                 <th width="18%">Waktu Berkunjung</th>
                             </tr>
@@ -82,8 +82,8 @@
                                 <tr>
                                     <td class="center">{{ $loop->iteration }}</td>
                                     <td>{{ $call->name }}</td>
-                                    <td>{{ $call->sales->name }}</td>
-                                    <td>{{ $call->email }}</td>
+                                    <td>{{ $call->sales->name ?? '-' }}</td>
+                                    <td>{{ $call->dinas }}</td>
                                     <td>{{ $call->no_hp }}</td>
                                     <td>{{ $call->created_at->format('d/M/Y h:i:s A') }}</td>
                                 </tr>

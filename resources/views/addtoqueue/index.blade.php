@@ -31,13 +31,14 @@
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             border: .5px solid #a7a7a7;
-            right: 2px;
-            bottom: 7%;
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 2%;
             width: max-content;
             height: max-content;
             cursor: move;
             z-index: 99999 !important;
-            position: fixed;
             display: none;
         }
 
@@ -165,21 +166,17 @@
                 </div>
                 <div class="input-field">
                     <input id="dinas" class="input-keyboard" name="dinas" type="text" autocomplete="off" required>
-                    <label for="dinas">Dinas / Instansi <span style="color: red">*</span></label></label>
+                    <label for="dinas">Lembaga / Instansi <span style="color: red">*</span></label></label>
                 </div>
                 <div class="input-field">
-                    <input id="email" class="input-keyboard" name="email" type="email" autocomplete="off">
-                    <label for="email">Email</label>
-                </div>
-                <div class="input-field">
-                    <input id="no_hp" class="input-keyboard" name="no_hp" type="text" autocomplete="off">
-                    <label for="no_hp">No HP</label>
+                    <input id="no_hp" class="input-keyboard" name="no_hp" type="text" autocomplete="off" required regexp="^[0-9]+$">
+                    <label for="no_hp">No HP <span style="color: red">*</span></label>
                 </div>
             </form>
         </div>
         <div class="modal-footer">
-            <a href="javascript:void(0)" class="modal-close waves-effect waves-red btn-flat">Batal</a>
-            <a href="javascript:void(0)" onclick="submitGuest()" class="waves-effect waves-green btn"
+            <a href="#!"  class="modal-close btn-flat" style="background: rgb(255, 90, 90); color: #fff">Batal</a>
+            <a href="#!" onclick="submitGuest()" class="waves-effect waves-green btn"
                 id="guestSubmit">Kirim</a>
         </div>
     </div>
@@ -396,7 +393,7 @@
             let shiftActive = false;
             let activeInput = jq3(".input-keyboard");
             let isDragging = false;
-            let offsetX, offsetY;
+            let offsetX = 0, offsetY = 0;
             let select2Open = false;
 
             function updateKeys() {
@@ -460,27 +457,40 @@
 
             jq3(".keyboard").on("mousedown touchstart", function(e) {
                 isDragging = true;
-                const cx = e.clientX || e.touches[0].clientX;
-                const cy = e.clientY || e.touches[0].clientY;
-                offsetX = cx - jq3(this).offset().left;
-                offsetY = cy - jq3(this).offset().top;
-                jq3(this).css("transition", "none");
+
+                const keyboard = jq3(this);
+
+                // Dapatkan posisi aktual
+                const rect = keyboard[0].getBoundingClientRect();
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+
+                offsetX = clientX - rect.left;
+                offsetY = clientY - rect.top;
+
+                // Set posisi awal fixed agar tidak transform lagi
+                keyboard.css({
+                    left: rect.left + "px",
+                    top: rect.top + "px",
+                    bottom: "auto",
+                    transform: "none",
+                });
             });
 
             jq3(document).on("mousemove touchmove", function(e) {
                 if (isDragging) {
-                    const cx = e.clientX || e.touches[0].clientX;
-                    const cy = e.clientY || e.touches[0].clientY;
+                    const clientX = e.clientX || e.touches[0].clientX;
+                    const clientY = e.clientY || e.touches[0].clientY;
+
                     jq3(".keyboard").css({
-                        left: cx - offsetX + "px",
-                        top: cy - offsetY + "px"
+                        left: clientX - offsetX + "px",
+                        top: clientY - offsetY + "px"
                     });
                 }
             });
 
             jq3(document).on("mouseup touchend", function() {
                 isDragging = false;
-                jq3(".keyboard").css("transition", "all 0.3s ease");
             });
 
             updateKeys();

@@ -36,7 +36,7 @@
                                 <th>Nama</th>
                                 <th>Email</th>
                                 <th>No Hp / Whatsapp</th>
-                                <th>Shift Sekarang</th>
+                                <th>Default Kiosk</th>
                                 <th width="10%" class="center">Aksi</th>
                             </tr>
                         </thead>

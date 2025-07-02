@@ -16,7 +16,6 @@ class CreateGuestsTable extends Migration
         Schema::create('guests', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('email')->nullable();
             $table->string('no_hp')->nullable();
             $table->string('dinas');
             $table->unsignedBigInteger('sales_id');

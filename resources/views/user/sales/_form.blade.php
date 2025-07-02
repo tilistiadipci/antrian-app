@@ -43,10 +43,10 @@
     </div>
     <div class="row">
         <div class="col s12">
-            <label for="nocounter">Shift Sekarang</label>
+            <label for="nocounter">Default Kiosk</label>
             <select id="is_sales_assigned" class="browser-default" name="is_sales_assigned">
-                <option value="1" {{ isset($sales) && $sales->is_sales_assigned == 1 ? 'selected' : '' }}>Ya</option>
                 <option value="0" {{ isset($sales) && $sales->is_sales_assigned == 0 ? 'selected' : '' }}>Tidak</option>
+                <option value="1" {{ isset($sales) && $sales->is_sales_assigned == 1 ? 'selected' : '' }}>Ya</option>
             </select>
             <div class="is_sales_assigned">
                 @if ($errors->has('is_sales_assigned'))

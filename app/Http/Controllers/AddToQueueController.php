@@ -44,7 +44,6 @@ class AddToQueueController extends Controller
         try {
             $guest = new \App\Guest;
             $guest->name = $request->name;
-            $guest->email = $request->email;
             $guest->no_hp = $request->no_hp;
             $guest->dinas = $request->dinas;
             $guest->sales_id = $request->sales;
