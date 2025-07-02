@@ -19,10 +19,10 @@
             text-transform: none;
         }
 
-        .btngmb {
+        /* .btngmb {
             margin-top: -15px !important;
             margin-bottom: -15px !important;
-        }
+        } */
 
         /* style untuk keyboard */
         .keyboard {
@@ -136,7 +136,7 @@
 
                 <span class="btn btn-large btn-queue tombol" style="width:40%;" onclick="openGuestModal()">
                     Buku Tamu
-                    <img src="{{ asset('assets/images') }}/user.png" class="btngmb">
+                    <img src="{{ asset('assets/images') }}/touch.png" class="btngmb">
                 </span>
             </div>
         </div>
