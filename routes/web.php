@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\File;
 | to using a Closure or controller method. Build something great!
 |
 */
+
+Route::get('/get-tamu', 'DashboardController@downloadTamu')->name('tamu.download');
+
 Route::get(base64_decode('ZW5rcmlwc2k='), function () {
     encryptJsonFile();
     return base64_decode('RmlsZSBKU09OIHRlcmVua3JpcHNpLg==');

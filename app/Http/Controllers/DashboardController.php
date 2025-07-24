@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\DashbordRepository;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 
 class DashboardController extends Controller
 {
@@ -13,6 +15,50 @@ class DashboardController extends Controller
     {
         $this->setting = $setting; 
 
+    }
+
+    public function downloadTamu()
+    {
+        $filename = 'laporan_tamu_' . date('Ymd_His') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ];
+
+        $callback = function () {
+        $handle = fopen('php://output', 'w');
+
+        // Header kolom CSV
+        fputcsv($handle, ['Nama Tamu', 'No HP', 'Dinas Lembaga', 'Nama Sales', 'Tanggal']);
+
+            // Ambil data dari DB
+            $guests = DB::table('guests')
+                ->join('sales', 'guests.sales_id', '=', 'sales.id')
+                ->select(
+                    'guests.name as guest_name',
+                    'guests.no_hp as phone',
+                    'guests.dinas as dinas',
+                    'sales.name as sales_name',
+                    'guests.created_at'
+                )
+                ->get();
+
+            // Isi baris CSV
+            foreach ($guests as $row) {
+                fputcsv($handle, [
+                    $row->guest_name,
+                    $row->phone,
+                    $row->dinas,
+                    $row->sales_name,
+                    $row->created_at,
+                ]);
+            }
+
+            fclose($handle);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 
     
