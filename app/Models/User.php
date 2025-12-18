@@ -52,6 +52,11 @@ class User extends Authenticatable
         return $this->belongsTo('App\Models\Counter');
     }
 
+    public function counter_user()
+    {
+        return $this->belongsTo('App\Models\Counter', 'counter', 'id');
+    }
+
     public function settings()
     {
         return $this->belongsTo('App\Models\Setting');

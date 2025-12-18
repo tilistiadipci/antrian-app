@@ -207,6 +207,18 @@
 
                                 <div class="row">
                                     <div class="input-field col s12">
+                                        <label for="header_kiosk">Header Kiosk</label>
+                                        <textarea name="header_kiosk" class="materialize-textarea" id="header_kiosk" cols="30" rows="10">{{ $settings->header_kiosk }}</textarea>
+                                        <div class="header_kiosk">
+                                            @if ($errors->has('header_kiosk'))
+                                                <div id="name-error" class="error">{{ $errors->first('header_kiosk') }}</div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="input-field col s12">
                                         <button class="btn waves-effect waves-light right" type="submit"
                                             name="but_upload_logo">
                                             {{ trans('messages.update') }}<i class="mdi-action-swap-vert left"></i>

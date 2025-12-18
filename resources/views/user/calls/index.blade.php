@@ -42,15 +42,37 @@
         </div>
     @endif
     <div class="container">
+        @if ($user->is_admin)
+            <div class="row">
+                @foreach ($departments as $department)
+                    <div class="btn green blue" style="margin:10px 20px 0px;">
+                        <i class="mdi-social-people left" style="margin:-1px 5px 0px;"></i> {{ $department->name }} <span
+                            id="count{{ $department->id }}">0</span>
+                    </div>
+                @endforeach
+            </div>
+        @endif
         <div class="row">
             <div class="col s12 m6">
                 <div class="card">
-                    <div class="btn blue right" style="margin:10px 20px 0px;" id="call_count" >
+                    <div class="btn blue right" style="margin:10px 20px 0px;" id="call_count">
                         <i class="mdi-social-people left" style="margin:-1px 5px 0px;"></i> 0
                     </div>
                     <div class="card-content">
-                        <span class="card-title"
-                            style="line-height:0;font-size:22px">{{ trans('messages.call.new_call') }}</span>
+                        @if ($user->is_admin)
+                            <span class="card-title" style="line-height:0;font-size:22px">
+                                {{ trans('messages.call.new_call') }}
+                            </span>
+                        @else
+                            <span class="card-title" style="line-height:0;font-size:22px">
+                                {{ trans('messages.call.new_call') }} 
+                                @if ($userdata->counter_user->call_type == 'text')
+                                    {{ str_replace('-', ' ', str_replace('.mp3', '', $userdata->counter_user->dinamic_call)) }}
+                                @else
+                                    {{ $userdata->counter_user->name  }} {{ $userdata->counter_user->idcounter  }}
+                                @endif
+                            </span>
+                        @endif
 
                         <div class="divider" style="margin:10px 0 10px 0"></div>
                         <div class="card-panel center-align" style="margin-bottom:0">
@@ -83,7 +105,7 @@
                                         <button class="btn btn-large waves-effect waves-light center" type="button"
                                             id="callAntrian"
                                             style="width:100%;background:#555;border-radius: 20px 20px 20px 20px;">
-                                            {{ trans('messages.call.call_next') }}<i
+                                            {{ trans('messages.call.call_next') }} {{ $userdata->department->name ?? '' }}<i
                                                 class="mdi-navigation-arrow-forward right"></i>
                                         </button>
                                     </div>
@@ -136,7 +158,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
@@ -299,23 +320,46 @@
                 drawCallback: function(res) {
                     var active = 0;
                     if (adm == 1) {
+                        // reset semua count department ke 0
+                        @foreach ($departments as $department)
+                            $('#count{{ $department->id }}').text(0);
+                        @endforeach
+
                         this.api().rows({
                             'filter': 'applied'
                         }).every(function() {
-                            if (this.data().called == 'Tidak') active++
-                        })
+                            var data = this.data();
+                            if (data.called == 'Tidak') {
+                                active++; // total sisa antrian
+
+                                // update count per department
+                                $('#count' + data.department_id).text(
+                                    parseInt($('#count' + data.department_id).text()) + 1
+                                );
+                            }
+                        });
+
+                        // tetap menampilkan total sisa antrian
+                        $('#call_count').html(
+                            `<i class="mdi-social-people left" style="margin:-1px 5px 0px;"></i> Total Sisa Antrian : ${active}`
+                        );
+
                     } else {
+                        console.log(res.json);
                         if (res.json && res.json.data.length > 0) {
                             for (var i = 0; i < res.json.data.length; i++) {
-                                if (res.json.data[i].called == 'Tidak' && res.json.data[i].department_id ==
-                                    departmentId) active++
+                                var item = res.json.data[i];
+                                if (item.called == 'Tidak' && item.department_id == departmentId) {
+                                    active++;
+                                }
                             }
                         }
+
+                        $('#call_count').html(
+                            `<i class="mdi-social-people left" style="margin:-1px 5px 0px;"></i> Sisa Antrian : ${active}`
+                        );
                     }
-
-                    $('#call_count').html(`<i class="mdi-social-people left" style="margin:-1px 5px 0px;"></i> Sisa Antrian : ${active}`);
                 }
-
             });
 
             setInterval(function() {
@@ -327,6 +371,26 @@
             const user = $('#user').val();
             const department = $('#department').val();
             const counter = $('#counter').val();
+
+            if (department == '') {
+                swal({
+                    title: 'Peringatan!',
+                    text: 'Silahkan pilih Layanan terlebih dahulu',
+                    type: 'warning',
+                    icon: 'warning'
+                });
+                return;
+            }
+
+            if (counter == '') {
+                swal({
+                    title: 'Peringatan!',
+                    text: 'Silahkan pilih Loket/Counter terlebih dahulu',
+                    type: 'warning',
+                    icon: 'warning'
+                });
+                return;
+            }
 
             $.ajax({
                 url: "{{ route('post_call') }}",

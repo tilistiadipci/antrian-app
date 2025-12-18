@@ -43,7 +43,11 @@
                     <option value="{{ $counter->id }}" selected>{{ $counter->name }} {{ $counter->idcounter }}
                     </option>
                 @else
-                    <option value="{{ $counter->id }}">{{ $counter->name }} {{ $counter->idcounter }}</option>
+                    @if ($counter->call_type == "text")
+                        <option value="{{ $counter->id }}">{{ str_replace('.mp3', '', $counter->dinamic_call) }}</option>
+                    @else
+                        <option value="{{ $counter->id }}">{{ $counter->name }} {{ $counter->idcounter }}</option>
+                    @endif
                 @endif
             @endforeach
         </select>

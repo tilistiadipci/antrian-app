@@ -133,6 +133,8 @@
             <script type="text/javascript" src="{{ asset('assets/js/video.js') }}"></script>
             <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
             <script>
+                var curr;
+
                 function anim() {
                     anime.timeline({
                             loop: false

@@ -22,13 +22,15 @@ class CallController extends Controller
     public function index(Request $request, Department $department)
     {
         
-        $user = User::where('id', auth()->user()->id)->with('department')->first();
+        $user = User::where('id', auth()->user()->id)->with(['department', 'counter_user'])->first();
+
         event(new \App\Events\TokenIssued());
         event(new \App\Events\TokenCalled());
 
         return view('user.calls.index', [
             // 'users' => $this->calls->getUsers(),
             'user' => $user,
+            'userdata' => $user,
             'counters' => $this->calls->getCounters(),
             'departments' => $this->calls->getDepartments(),
             'data' => $this->calls->getDisplayData(),
@@ -126,6 +128,7 @@ class CallController extends Controller
 
         $call->delete(); 
 
+        event(new \App\Events\TokenIssued());
         event(new \App\Events\TokenCalled());
 
         if (request()->ajax()) {

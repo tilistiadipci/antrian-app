@@ -148,6 +148,7 @@
     <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
 
     <script>
+        var curr;
         $(function() {
             $('#main').css({
                 'min-height': $(window).height() - 114 + 'px'

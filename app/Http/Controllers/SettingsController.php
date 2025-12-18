@@ -78,6 +78,7 @@ class SettingsController extends Controller
         $settings->email = $request->email;
         $settings->phone = $request->phone;
         $settings->location = $request->location;
+        $settings->header_kiosk = $request->header_kiosk;
 
         if(($_FILES['filelogo']['name'] != '')){
            $settings->logo = $_FILES['filelogo']['name'];

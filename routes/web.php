@@ -78,6 +78,7 @@ Route::post('password/reset', ['as' => 'post_reset', 'uses' => 'Auth\ResetPasswo
 
 // Add to Queue
 Route::get('queue', ['as' => 'add_to_queue', 'uses' => 'AddToQueueController@index']);
+Route::get('queue/{id}', ['as' => 'add_to_queue1', 'uses' => 'AddToQueueController@index1']);
 Route::post('queue', ['as' => 'post_add_to_queue', 'uses' => 'AddToQueueController@postDept']);
 Route::post('guest-register', ['as' => 'guest_register', 'uses' => 'AddToQueueController@guestRegister']);
 
@@ -86,6 +87,8 @@ Route::get('get-content', ['as' => 'get_content', 'uses' => 'AddToQueueControlle
 // Display
 Route::get('display', ['as' => 'display', 'uses' => 'DisplayController@index']);
 Route::get('display/1', ['as' => 'display_1', 'uses' => 'DisplayController@index1']);
+Route::get('display/show/{id}', ['as' => 'display_show', 'uses' => 'DisplayController@template']);
+
 Route::group(['middleware' => 'auth:members'], function () {
     Route::get('user/profile', ['as' => 'profile', 'uses' => 'HomeController@profile']);
     Route::post('user/profile', ['as' => 'edit_profile', 'uses' => 'HomeController@edit']);
@@ -147,6 +150,9 @@ Route::group(['middleware' => 'auth:users'], function () {
 
     // Counter
     Route::resource('counters', 'CounterController', ['except' => ['show']]);
+
+    // Template
+    Route::resource('templates', 'TemplateController', ['except' => ['show']]);
 
     //Reports
     Route::group(['prefix' => 'reports', 'as' => 'reports::'], function () {

@@ -449,7 +449,7 @@
                     var namab = new Array("Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Nov", "Des");
                     var tanggal = new Date();
                     setTimeout("hari()", 0);
-                    document.getElementById("dino").innerHTML = tanggal.getDate() + " " + namab[tanggal.getMonth()] + " " + tanggal
+                    document.getElementById("dino").innerHTML = tanggal.getDate() + " " + namab[tanggal.getMonth()-1] + " " + tanggal
                         .getFullYear();
                     document.getElementById("dino1").innerHTML = namah[tanggal.getDay()];
                 }

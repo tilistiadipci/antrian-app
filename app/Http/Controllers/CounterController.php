@@ -39,7 +39,17 @@ class CounterController extends Controller
             'name' => 'required',
         ]);
 
-        Counter::create($request->all());
+        $counter = new Counter();
+        $counter->name = $request->name;
+        $counter->durasi = $request->durasi;
+        $counter->call_type = $request->call_type;
+        if ($request->call_type == "text") {
+            $counter->dinamic_call = $request->text_call;
+        } else {
+            $counter->idcounter = $request->idcounter;
+        }
+
+        $counter->save();
 
         flash()->success('Counter created');
         return redirect()->route('counters.index');
@@ -63,8 +73,14 @@ class CounterController extends Controller
         ]);
 
         $counter->name = $request->name;
-        $counter->idcounter = $request->idcounter;
         $counter->durasi = $request->durasi;
+        $counter->call_type = $request->call_type;
+        if ($request->call_type == "text") {
+            $counter->dinamic_call = $request->text_call;
+        } else {
+            $counter->idcounter = $request->idcounter;
+        }
+
         $counter->save();
 
         flash()->success('Counter updated');

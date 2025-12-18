@@ -46,4 +46,28 @@ class DisplayController extends Controller
         ]);
     }
 
+    public function template($id)
+    {
+        $settings = $this->displays->getSettings();
+        $template = $this->displays->getTemplate($id);
+
+        if (empty($template)) {
+            abort(404);
+        }
+
+        \App::setLocale($settings->language->code);
+
+        event(new \App\Events\TokenCalled());
+
+        $view = 'display.templates.' . $id;
+        $contents = json_decode($template->content, true);
+        // dd($contents);
+        return view($view, [
+            'data' => $this->displays->getDisplayByTemplate(3, $template),
+            'settings' => $settings,
+            'template' => $template,
+            'contents' => $contents,
+            'counters' => $this->displays->getCounters(),
+        ]);
+    }
 }

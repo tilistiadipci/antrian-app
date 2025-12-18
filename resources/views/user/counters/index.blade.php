@@ -41,7 +41,11 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $counter->name }}</td>
-                                    <td>{{ $counter->idcounter}}</td>
+                                    @if ($counter->call_type == "text")
+                                        <td>{{ str_replace(".mp3", "", $counter->dinamic_call) }}</td>
+                                    @else
+                                        <td>{{ $counter->idcounter}}</td>
+                                    @endif
                                     <td>
                                         <a class="btn-floating btn-action waves-effect waves-light orange tooltipped" href="{{ route('counters.edit', ['counters' => $counter->id]) }}" data-position="top" data-tooltip="{{ trans('messages.edit') }}"><i class="mdi-editor-mode-edit"></i></a>
                                         <a class="btn-floating btn-action waves-effect waves-light red tooltipped frmsubmit" href="{{ route('counters.destroy', ['counters' => $counter->id]) }}" data-position="top" data-tooltip="{{ trans('messages.delete') }}" method="DELETE"><i class="mdi-action-delete"></i></a>
