@@ -81,7 +81,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            
+
                             <div class="input-field">
                                 <textarea name="title" id="" cols="30" rows="10" class="materialize-textarea">PUSKESMAS JAKARTA BARAT</textarea>
                                 <label>Title</label>
@@ -105,10 +105,9 @@
                             <div class="row" style="margin-bottom: 20px">
                                 <div class="col s12">
                                     <label>Size Logo (%)</label>
-                                    <input type="number" name="size_logo"
-                                        value="{{ $content['size_logo'] ?? '30' }}">
+                                    <input type="number" name="size_logo" value="{{ $content['size_logo'] ?? '30' }}">
                                 </div>
-                                 <div class="col s12">
+                                <div class="col s12">
                                     <label>Title Font Size (px)</label>
                                     <input type="number" name="title_font_size"
                                         value="{{ $content['title_font_size'] ?? '28' }}">
@@ -208,41 +207,6 @@
                         </div>
                     </div>
 
-                    {{-- ========================= --}}
-                    {{-- VIDEO BACKGROUND --}}
-                    {{-- ========================= --}}
-                    {{-- <div class="card">
-                        <div class="card-content">
-                            <span class="card-title">Video 1 (Required)</span>
-                            <div class="file-field input-field">
-                                <div class="btn">
-                                    <span>Upload Video</span>
-                                    <input type="file" name="background_video_1" accept="video/mp4">
-                                </div>
-                                <div class="file-path-wrapper">
-                                    <input class="file-path validate" type="text" placeholder="MP4"
-                                        value="{{ $content['background_video_1'] ?? '' }}">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-content">
-                            <span class="card-title">Video 2 (Optional)</span>
-                            <div class="file-field input-field">
-                                <div class="btn">
-                                    <span>Upload Video</span>
-                                    <input type="file" name="background_video_2" accept="video/mp4">
-                                </div>
-                                <div class="file-path-wrapper">
-                                    <input class="file-path validate" type="text" placeholder="MP4"
-                                        value="{{ $content['background_video_2'] ?? '' }}">
-                                </div>
-                            </div>
-                        </div>
-                    </div> --}}
-
                     {{-- SUBMIT --}}
                     <div class="card">
                         <div class="card-content right-align">
@@ -273,5 +237,22 @@
                     $(this).val('');
                 }
             });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deptSelect = document.getElementById('departmentSelect');
+
+            deptSelect.addEventListener('change', function() {
+                const selected = Array.from(this.selectedOptions);
+
+                if (selected.length > 2) {
+                    // batalkan pilihan terakhir
+                    selected[selected.length - 1].selected = false;
+
+                    alert('Maksimal hanya boleh memilih 2 Department');
+                }
+            });
+        });
     </script>
 @endsection
