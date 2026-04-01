@@ -316,7 +316,7 @@
 
         <!-- MARQUEE -->
         <div class="marquee-box border-top"  style="background-color: {{ $contents['footer_background_color'] }}">
-            <div class="marquee" style="font-size: {{ $contents['footer_font_size'] ?? '32' }}px; color: {{ $contents['footer_text_color'] }}">
+            <div class="marquee" style="font-size: {{ $contents['footer_font_size'] ?? '32' }}px; color: {{ $contents['footer_text_color'] }}; font-weight: bold;">
                 <span>
                     {{ $contents['text_footer'] }}
                 </span>
