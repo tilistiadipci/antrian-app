@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use App\Models\Template;
+use App\Template;
 
 class TemplatePolicy
 {
@@ -22,8 +22,6 @@ class TemplatePolicy
 
     public function access(User $user)
     {
-        if($user->role=='A') {
-            return true;
-        }
+        return $user->role == 'A';
     }
 }
