@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\DisplayRepository;
-use App\Models\Counter;
-
  
 class DisplayController extends Controller
 {
@@ -16,11 +14,22 @@ class DisplayController extends Controller
         $this->displays = $displays;
     }
 
+    private function applyDisplayLocale($settings)
+    {
+        $locale = config('app.locale');
+
+        if ($settings && $settings->language && !empty($settings->language->code)) {
+            $locale = $settings->language->code;
+        }
+
+        \App::setLocale($locale);
+    }
+
     public function index()
     {
         $settings = $this->displays->getSettings();
 
-        \App::setLocale($settings->language->code);
+        $this->applyDisplayLocale($settings);
 
         event(new \App\Events\TokenCalled());
 
@@ -35,7 +44,7 @@ class DisplayController extends Controller
     {
         $settings = $this->displays->getSettings();
 
-        \App::setLocale($settings->language->code);
+        $this->applyDisplayLocale($settings);
 
         event(new \App\Events\TokenCalled());
 
@@ -55,7 +64,7 @@ class DisplayController extends Controller
             abort(404);
         }
 
-        \App::setLocale($settings->language->code);
+        $this->applyDisplayLocale($settings);
 
         event(new \App\Events\TokenCalled());
 

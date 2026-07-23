@@ -30,8 +30,8 @@
                 </a>
 
                 <form method="POST" action="{{ route('templates.update', $template->id) }}" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
+                    {{ csrf_field() }}
+                    {{ method_field('PUT') }}
 
                     @php
                         $content = json_decode($template->content, true) ?? [];

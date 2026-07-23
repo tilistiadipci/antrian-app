@@ -31,7 +31,7 @@
 
                 <form method="POST" action="{{ route('templates.store') }}" enctype="multipart/form-data">
 
-                    @csrf
+                    {{ csrf_field() }}
 
                     {{-- ========================= --}}
                     {{-- INFORMASI TEMPLATE --}}
