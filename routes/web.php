@@ -3,6 +3,26 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
+Route::get('assets/{path}', function ($path) {
+    $assetsRoot = realpath(base_path('assets'));
+    $requestedPath = realpath(base_path('assets/' . $path));
+
+    if (!$assetsRoot || !$requestedPath || strpos($requestedPath, $assetsRoot) !== 0 || !is_file($requestedPath)) {
+        abort(404);
+    }
+
+    if (strpos($path, 'files/') === 0) {
+        return response(file_get_contents($requestedPath), 200, [
+            'Content-Type' => 'text/plain; charset=UTF-8',
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ]);
+    }
+
+    return response()->file($requestedPath);
+})->where('path', '.*');
+
 
 
 /*
