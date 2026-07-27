@@ -270,7 +270,7 @@
                                 style="width:100%; height:100%; object-fit:contain;">
                         @else
                             <div>
-                                <video class="video-element" id="video-element" preload="auto" autoplay muted
+                                <video class="video-element" id="video-element" preload="auto" autoplay
                                     playsinline>
                                 </video>
                             </div>
