@@ -16,7 +16,7 @@
     <title>{{ $settings->name }} </title>
     <!-- Fonts -->
     <!-- Favicon -->
-    <link rel="icon" href="{{ route('beranda') }}/public/img/core-img/favicon.ico">
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/'.$settings->logo) }}?v={{ file_exists(base_path('assets/images/'.$settings->logo)) ? filemtime(base_path('assets/images/'.$settings->logo)) : 1 }}">
     <!-- CSS Libraries -->
     <link rel="stylesheet" href="{{ route('beranda') }}/public/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ route('beranda') }}/public/css/animate.css">

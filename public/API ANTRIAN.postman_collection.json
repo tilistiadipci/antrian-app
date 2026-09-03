@@ -1,0 +1,185 @@
+{
+  "info": {
+    "_postman_id": "e35eb0e2-49b4-49c5-b343-f019632d699c",
+    "name": "API ANTRIAN DEV",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "4939248",
+    "_collection_link": "https://go.postman.co/collection/4939248-e35eb0e2-49b4-49c5-b343-f019632d699c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "List Antrian",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "TYHohWiYPjeWGvKHuGqAfHU59JO8vx0K",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{urlantrian}}/api/list-antrian?layanan_id=1",
+          "host": [
+            "{{urlantrian}}"
+          ],
+          "path": [
+            "api",
+            "list-antrian"
+          ],
+          "query": [
+            {
+              "key": "layanan_id",
+              "value": "1",
+              "description": "kosongkan untuk semua layanan"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Ambil Antrian",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "TYHohWiYPjeWGvKHuGqAfHU59JO8vx0K",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{urlantrian}}/api/get-antrian?layanan_id=1",
+          "host": [
+            "{{urlantrian}}"
+          ],
+          "path": [
+            "api",
+            "get-antrian"
+          ],
+          "query": [
+            {
+              "key": "layanan_id",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Counter / Loket",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "TYHohWiYPjeWGvKHuGqAfHU59JO8vx0K",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{urlantrian}}/api/get-counters",
+          "host": [
+            "{{urlantrian}}"
+          ],
+          "path": [
+            "api",
+            "get-counters"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Layanan / Department",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "TYHohWiYPjeWGvKHuGqAfHU59JO8vx0K",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{urlantrian}}/api/get-layanan",
+          "host": [
+            "{{urlantrian}}"
+          ],
+          "path": [
+            "api",
+            "get-layanan"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Panggil Antrian",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "TYHohWiYPjeWGvKHuGqAfHU59JO8vx0K",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{urlantrian}}/api/call?counter_id=1&layanan_id=1",
+          "host": [
+            "{{urlantrian}}"
+          ],
+          "path": [
+            "api",
+            "call"
+          ],
+          "query": [
+            {
+              "key": "counter_id",
+              "value": "1",
+              "description": "0 or 1"
+            },
+            {
+              "key": "layanan_id",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Panggil Ulang Antrian",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "TYHohWiYPjeWGvKHuGqAfHU59JO8vx0K",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{urlantrian}}/api/recall?queue_id=2",
+          "host": [
+            "{{urlantrian}}"
+          ],
+          "path": [
+            "api",
+            "recall"
+          ],
+          "query": [
+            {
+              "key": "queue_id",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

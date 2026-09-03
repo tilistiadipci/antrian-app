@@ -30,7 +30,11 @@ class CompanyComposer
         $settings = Setting::first();
         $view->with('company_name', $settings->name);
         $view->with('background_menu', $settings->background_menu);
-         $view->with('background', $settings->background);
+        $view->with('background', $settings->background);
+        $view->with('logo', $settings->logo);
+
+        $logoPath = base_path('assets/images/'.$settings->logo);
+        $view->with('logo_version', file_exists($logoPath) ? filemtime($logoPath) : 1);
 
     }
 }

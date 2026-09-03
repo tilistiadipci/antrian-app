@@ -8,7 +8,7 @@
     {{-- <li class="bold{!! Request::is('sales*') ? ' active' : '' !!}"><a href="{{ url('sales') }}" class="waves-effect waves-cyan truncate">
         <i class="mdi-action-account-box"></i> Sales</a>
     </li> --}}
-@endif    
+@endif
     <li class="bold{!! Request::is('calls*') ? ' active' : '' !!}"><a href="{{ route('calls') }}" class="waves-effect waves-cyan truncate">
         <i class="mdi-communication-chat"></i> {{ trans('messages.mainapp.menu.call') }}</a>
     </li>

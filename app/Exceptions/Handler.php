@@ -91,6 +91,10 @@ class Handler extends ExceptionHandler
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
 
+        if ($request->is('apidocs')) {
+            return redirect()->guest('/login');
+        }
+
         if ($request->is('members') || $request->is('/*')) {
                 return redirect()->guest('/user/login');
             }

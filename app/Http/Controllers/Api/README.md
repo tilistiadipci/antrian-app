@@ -34,22 +34,22 @@ Contoh:
 http://192.168.1.116:90/api/get-antrian?layanan_id=1
 ```
 
-## 4. Next Antrian
+## 4. List Antrian Menunggu
 
 - Method: `GET`
-- URL: `/next`
-- Full URL: `http://192.168.1.116:90/api/next`
-- Request parameter:
-  - `counter_id`
-  - `layanan_id`
+- URL: `/list-antrian`
+- Menampilkan maksimal 5 antrean teratas yang masih menunggu hari ini.
+- Parameter opsional: `layanan_id`
 
 Contoh:
 
 ```text
-http://192.168.1.116:90/api/next?counter_id=1&layanan_id=1
+http://192.168.1.116:90/api/list-antrian?layanan_id=1
 ```
 
-## 5. Call Antrian
+## 5. Call Antrian Berikutnya
+
+Gunakan endpoint ini untuk mengambil sekaligus memanggil antrean berikutnya dan menampilkannya pada layar antrean.
 
 - Method: `GET`
 - URL: `/call`
@@ -66,6 +66,8 @@ http://192.168.1.116:90/api/call?user_id=1&counter_id=1&layanan_id=1
 ```
 
 ## 6. Recall Antrian
+
+Gunakan endpoint ini hanya untuk memanggil ulang antrean yang sama. Jangan gunakan `/call` untuk panggilan ulang karena `/call` akan mengambil antrean berikutnya.
 
 - Method: `GET`
 - URL: `/recall`

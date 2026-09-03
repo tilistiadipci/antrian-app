@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Call;
 use App\Models\Counter;
 use App\Models\Department;
+use App\Models\Queue;
 use App\Models\Setting;
 use App\Models\User;
 use App\Repositories\CallRepository;
@@ -88,38 +89,40 @@ class ApiCallController extends Controller
         ]);
     }
 
-    public function next(Request $request)
+    public function getQueueList(Request $request)
     {
-        // $this->validate($request, [
-        //     'counter_id' => 'required|exists:counters,id',
-        //     'department_id' => 'required|exists:departments,id',
-        // ]);
-
-        $counter = Counter::findOrFail($request->get('counter_id', 1));
-        $department = Department::findOrFail($request->get('layanan_id', 1));
-
-        $queue = $this->calls->getNextToken($department);
-
-        if ($queue === null) {
-            return response()->json([
-                'status' => 'empty',
-                'message' => 'Tidak ada antrean berikutnya',
-                'data' => null,
+        $query = Queue::with('department')
+            ->where('called', 0)
+            ->whereBetween('created_at', [
+                Carbon::now()->format('Y-m-d 00:00:00'),
+                Carbon::now()->format('Y-m-d 23:59:59'),
             ]);
+
+        if ($request->has('layanan_id') && $request->get('layanan_id') !== '') {
+            $query->where('department_id', $request->get('layanan_id'));
         }
+
+        $queues = $query->orderBy('created_at', 'asc')
+            ->take(5)
+            ->get()
+            ->map(function ($queue) {
+                $letter = $queue->department->letter;
+
+                return [
+                    'queue_id' => $queue->id,
+                    'number' => $queue->number,
+                    'call_number' => $letter !== '' ? $letter.'-'.$queue->number : $queue->number,
+                    'layanan_id' => $queue->department->id,
+                    'department' => $queue->department->name,
+                    'created_at' => $queue->created_at->format('d-m-Y H:i'),
+                ];
+            })
+            ->values();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Antrean berikutnya ditemukan',
-            'data' => [
-                'queue_id' => $queue->id,
-                'number' => $queue->number,
-                'call_number' => $department->letter . '-' . $queue->number,
-                'counter_id' => $counter->id,
-                'counter' => $counter->name,
-                'layanan_id' => $department->id,
-                'department' => $department->name,
-            ],
+            'message' => $queues->count() > 0 ? 'Daftar antrean berhasil diambil' : 'Tidak ada antrean',
+            'data' => $queues,
         ]);
     }
 

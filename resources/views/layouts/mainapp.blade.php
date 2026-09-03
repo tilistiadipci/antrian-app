@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="msapplication-tap-highlight" content="no">
     <title>@yield('title') | Antrian</title>
-    <link rel="icon" href="{{ asset('assets/favicon.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/images/'.$logo) }}?v={{ $logo_version }}">
     <link href="{{ asset('assets/css/materialize.min.css') }}" type="text/css" rel="stylesheet"
         media="screen,projection">
     <link href="{{ asset('assets/js/plugins/perfect-scrollbar/perfect-scrollbar.css') }}" type="text/css"
