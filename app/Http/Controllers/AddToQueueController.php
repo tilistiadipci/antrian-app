@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\NetworkPrintConnector;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
@@ -111,91 +112,96 @@ class AddToQueueController extends Controller
             $number = ($department->letter!='') ? $department->letter.'-'.$queue->number : $queue->number;
             $settings = Setting::first();
 
-            event(new \App\Events\TokenIssued());
-
-            if ($settings->printer_type == 'LAN') {
-                $connector = new NetworkPrintConnector($settings->ip_address, 9100);
+            if (env('APP_MODE') === 'Development') {
+                // In development mode, skip printing and just log the token issued
+                Log::info("Token issued: " . $number);
             } else {
-                $connector = new WindowsPrintConnector($settings->port_usb);
+                event(new \App\Events\TokenIssued());
+
+                if ($settings->printer_type == 'LAN') {
+                    $connector = new NetworkPrintConnector($settings->ip_address, 9100);
+                } else {
+                    $connector = new WindowsPrintConnector($settings->port_usb);
+                }
+                
+                $printer = new Printer($connector);
+
+                App::setLocale($settings->language->code);
+                
+                $logoPath = app_path().'/../assets/images/'.$settings->logo;
+
+                // dd($logoPath);
+                $tempLogoPath = $this->resizeImage($logoPath);
+
+                $logo = EscposImage::load($tempLogoPath, false);
+
+                // Print logo
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+                $printer->bitImage($logo);
+                $printer->feed();
+                
+                unlink($tempLogoPath);
+
+                // Print company name
+                $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
+                $printer->setTextSize(2, 2);
+                $printer->setEmphasis(true);
+                $printer->text($settings->name . "\n\n");
+                $printer->selectPrintMode();
+
+                // Print department name
+                $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
+                $printer->setTextSize(2, 2);
+                $printer->text($department->name . "\n\n");
+                $printer->selectPrintMode();
+
+                // Print queue number
+                $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
+                $printer->text("No Antrian Anda\n\n");
+                $printer->selectPrintMode(Printer::MODE_DOUBLE_HEIGHT | Printer::MODE_DOUBLE_WIDTH);
+                $printer->setTextSize(4, 4);
+                $printer->setEmphasis(true);
+                $printer->text($number . "\n\n");
+                $printer->selectPrintMode();
+
+                // Print additional information
+                $printer->text("Harap tunggu giliran Anda\n\n");
+                $printer->text("Menunggu: " . $total . " orang\n\n\n");
+                $printer->selectPrintMode();
+
+                $carbonDate = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now())
+                                ->setTimezone('Asia/Jakarta');
+
+                $date = $carbonDate->format('d-m-Y');
+                $time = $carbonDate->format('h:i:s A');
+
+                // Menghitung panjang teks untuk penyesuaian posisi
+                $totalLength = strlen($date) + strlen($time);
+
+                // Hitung jumlah spasi untuk penyesuaian posisi
+                $spacesCount = 45 - $totalLength;
+
+                // Set left justification untuk tanggal
+                $printer->setJustification(Printer::JUSTIFY_LEFT);
+                $printer->text("  ".$date);
+
+                // Tambahkan spasi di antara tanggal dan waktu
+                for ($i = 0; $i < $spacesCount; $i++) {
+                    $printer->text(" ");
+                }
+
+                // Set right justification untuk waktu
+                $printer->setJustification(Printer::JUSTIFY_RIGHT);
+                $printer->text($time . "\n");
+
+                // Kembali ke penjustifikasi default (center) jika diperlukan
+                $printer->setJustification(Printer::JUSTIFY_CENTER);
+
+                // Feed and cut
+                $printer->feed();
+                $printer->cut();
+                $printer->close();
             }
-            
-            $printer = new Printer($connector);
-
-            App::setLocale($settings->language->code);
-            
-            $logoPath = app_path().'/../assets/images/'.$settings->logo;
-
-            // dd($logoPath);
-            $tempLogoPath = $this->resizeImage($logoPath);
-
-            $logo = EscposImage::load($tempLogoPath, false);
-
-            // Print logo
-            $printer->setJustification(Printer::JUSTIFY_CENTER);
-            $printer->bitImage($logo);
-            $printer->feed();
-            
-            unlink($tempLogoPath);
-
-            // Print company name
-            $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
-            $printer->setTextSize(2, 2);
-            $printer->setEmphasis(true);
-            $printer->text($settings->name . "\n\n");
-            $printer->selectPrintMode();
-
-            // Print department name
-            $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
-            $printer->setTextSize(2, 2);
-            $printer->text($department->name . "\n\n");
-            $printer->selectPrintMode();
-
-            // Print queue number
-            $printer->selectPrintMode(Printer::MODE_DOUBLE_WIDTH);
-            $printer->text("No Antrian Anda\n\n");
-            $printer->selectPrintMode(Printer::MODE_DOUBLE_HEIGHT | Printer::MODE_DOUBLE_WIDTH);
-            $printer->setTextSize(4, 4);
-            $printer->setEmphasis(true);
-            $printer->text($number . "\n\n");
-            $printer->selectPrintMode();
-
-            // Print additional information
-            $printer->text("Harap tunggu giliran Anda\n\n");
-            $printer->text("Menunggu: " . $total . " orang\n\n\n");
-            $printer->selectPrintMode();
-
-            $carbonDate = Carbon::createFromFormat('Y-m-d H:i:s', Carbon::now())
-                            ->setTimezone('Asia/Jakarta');
-
-            $date = $carbonDate->format('d-m-Y');
-            $time = $carbonDate->format('h:i:s A');
-
-            // Menghitung panjang teks untuk penyesuaian posisi
-            $totalLength = strlen($date) + strlen($time);
-
-            // Hitung jumlah spasi untuk penyesuaian posisi
-            $spacesCount = 45 - $totalLength;
-
-            // Set left justification untuk tanggal
-            $printer->setJustification(Printer::JUSTIFY_LEFT);
-            $printer->text("  ".$date);
-
-            // Tambahkan spasi di antara tanggal dan waktu
-            for ($i = 0; $i < $spacesCount; $i++) {
-                $printer->text(" ");
-            }
-
-            // Set right justification untuk waktu
-            $printer->setJustification(Printer::JUSTIFY_RIGHT);
-            $printer->text($time . "\n");
-
-            // Kembali ke penjustifikasi default (center) jika diperlukan
-            $printer->setJustification(Printer::JUSTIFY_CENTER);
-
-            // Feed and cut
-            $printer->feed();
-            $printer->cut();
-            $printer->close();
 
             flash()->success('Token Added');
             DB::commit();
