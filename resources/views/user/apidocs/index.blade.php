@@ -13,7 +13,8 @@
         a { color:inherit; text-decoration:none; }
         .topbar { position:sticky; top:0; z-index:20; height:64px; padding:0 28px; display:flex; align-items:center; justify-content:space-between; background:#fff; border-bottom:1px solid var(--line); }
         .brand { display:flex; align-items:center; gap:12px; font-weight:700; }
-        .brand-mark { width:32px; height:32px; display:grid; place-items:center; border-radius:9px; color:#fff; background:var(--primary); }
+        .brand-mark { width:32px; height:32px; display:grid; place-items:center; overflow:hidden; border-radius:9px; background:var(--primary-soft); }
+        .brand-mark img { display:block; width:100%; height:100%; object-fit:contain; }
         .crumb { color:#98a2b3; font-weight:400; }
         .dashboard-link { padding:8px 15px; color:#fff; background:var(--primary); border-radius:9px; font-size:12px; font-weight:700; }
         .page { max-width:1540px; margin:0 auto; display:grid; grid-template-columns:220px minmax(0, 1fr) 210px; gap:34px; padding:30px 28px 80px; }
@@ -69,7 +70,7 @@
 <body>
     <header class="topbar">
         <div class="brand">
-            <span class="brand-mark">A</span>
+            <span class="brand-mark"><img src="{{ asset('assets/images/'.$logo) }}?v={{ $logo_version }}" alt="Logo {{ $company_name }}"></span>
             <span>{{ $company_name }}</span>
             <span class="crumb">/</span>
             <span class="crumb">Dokumentasi API</span>
@@ -94,7 +95,7 @@
             </div>
             <div class="nav-group">
                 <div class="nav-title">Unduhan</div>
-                <a class="nav-link" href="{{ asset('API ANTRIAN.postman_collection.json') }}" download="API ANTRIAN.postman_collection.json">Download Collection Postman</a>
+                <a class="nav-link" href="{{ route('apidocs.postman') }}" download="API ANTRIAN.postman_collection.json">Download Collection Postman</a>
             </div>
         </nav>
 

@@ -130,6 +130,7 @@ Route::group(['middleware' => 'auth:users'], function () {
     // Logout
     Route::post('logout', ['as' => 'logout', 'uses' => 'Auth\LoginController@logout']);
     Route::get('apidocs', ['as' => 'apidocs', 'uses' => 'ApiDocsController@index']);
+    Route::get('apidocs/postman-collection', ['as' => 'apidocs.postman', 'uses' => 'ApiDocsController@downloadPostmanCollection']);
     Route::get('stafchat', ['as' => 'stafchathome', 'uses' => 'HomeController@stafChatHome']);
     Route::get('stafchat/{id}', ['as' => 'stafchat', 'uses' => 'HomeController@stafChat']);
     Route::post('stafchat/{id}', ['as' => 'sendchatstaf', 'uses' => 'HomeController@sendMessageStaf']);

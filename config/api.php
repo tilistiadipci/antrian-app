@@ -4,7 +4,7 @@ return [
     'key' => env('ANTRIAN_API_KEY'),
 
     // Update this value whenever the public API behavior changes.
-    'version' => '03-09-2026 16:51',
+    'version' => '04-09-2026 10:24',
 
     'endpoints' => [
         [

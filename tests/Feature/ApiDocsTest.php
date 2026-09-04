@@ -37,4 +37,21 @@ class ApiDocsTest extends TestCase
         $this->assertContains('Download Collection Postman', $response->getContent());
         $this->assertContains('API ANTRIAN.postman_collection.json', $response->getContent());
     }
+
+    public function testAuthenticatedUserCanDownloadCurrentPostmanCollection()
+    {
+        $user = new User([
+            'name' => 'API Documentation Tester',
+            'role' => 'A',
+        ]);
+
+        $this->be($user, 'users');
+
+        $response = $this->get('/apidocs/postman-collection');
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertContains('attachment; filename="API ANTRIAN.postman_collection.json"', $response->headers->get('Content-Disposition'));
+        $this->assertContains(url('/api').'/recall', $response->getContent());
+        $this->assertContains(config('api.key'), $response->getContent());
+    }
 }
