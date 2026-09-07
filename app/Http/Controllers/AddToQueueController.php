@@ -112,7 +112,7 @@ class AddToQueueController extends Controller
             $number = ($department->letter!='') ? $department->letter.'-'.$queue->number : $queue->number;
             $settings = Setting::first();
 
-            if (env('APP_MODE') === 'Development') {
+            if (env('APP_MODE') == 'Development') {
                 // In development mode, skip printing and just log the token issued
                 Log::info("Token issued: " . $number);
             } else {
